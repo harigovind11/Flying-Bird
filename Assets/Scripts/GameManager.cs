@@ -9,14 +9,14 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
-    
+
     [SerializeField] private GameObject gameOverCanvas;
     [SerializeField] private AudioClip bgm;
     [SerializeField] private AudioClip death;
     [SerializeField] private AudioClip levelUp;
 
-    [SerializeField] GameObject flappy; 
-    
+    [SerializeField] GameObject bird;
+
     private AudioSource _audioSource;
 
     private Animator animator;
@@ -28,43 +28,29 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
-       _audioSource = GetComponent<AudioSource>();
-       _audioSource.Play();
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.Play();
 
-        animator = flappy.GetComponent<Animator>();
         Time.timeScale = 1f;
+        animator = bird.GetComponent<Animator>();
 
     }
-
-    // public void Update()
-    // {
-    //     if (Score.instance._score == 10)
-    //     {
-    //         animator.SetTrigger("level2");
-    //         _audioSource.PlayOneShot(levelUp);
-    //         _audioSource.Play();
-    //     }
-    //     else if(Score.instance._score == 20)
-    //     {
-    //         animator.SetTrigger("level3");
-    //         _audioSource.PlayOneShot(levelUp);
-    //         _audioSource.Play();
-    //     }
-    // }
-
     public void GameOver()
     {
         gameOverCanvas.SetActive(true);
-        Time.timeScale = 0f;
+        animator.SetTrigger("puff");
         _audioSource.Stop();
         _audioSource.PlayOneShot(death);
+        bird.GetComponent<FlyAbility>().enabled = false;
+        bird.GetComponent<Rigidbody2D>().gravityScale = 0f;
+
     }
 
     public void ReloadGame()
     {
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-     
+
     }
 
 
